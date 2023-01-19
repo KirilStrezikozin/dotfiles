@@ -1,0 +1,8 @@
+# .gitgnore file for dotfiles bare repo,
+
+# ignore dotfiles/ bare repo root folder
+dotfiles/
+
+# ignore packer_compiled.lua in nvim config
+./.config/nvim/plugin/packer_compiled.lua
+
