@@ -24,14 +24,14 @@ map('n', "rr", "'.")
 map('n', "yp", "yyp")
 
 -- move things around
-map("v", "K", ":m '<-2<CR>gv=gv")
+map("v", "K", ":m '>-2<CR>gv=gv")
 map("v", "J", ":m '<+1<CR>gv=gv")
 
 -- paste without losing what was in the log
-map("x", "<leader>p", "\"_dP")
+map("v", "<leader>p", "\"_dP")
 
 -- type in the text to current replace the current word with
 -- in the entire file
-map("n", "<leader>S", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+map("n", "<leader>S", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
 -- in the line I'm on
-map("n", "<leader>s", [[:s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+map("n", "<leader>s", ":s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
