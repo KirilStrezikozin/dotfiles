@@ -8,7 +8,7 @@ Original idea of configuring config files in the way I did belongs to [Atlassian
 
 Sync:
 ```
-$ dotfiles pull
+dotfiles pull
 ```
 
 Brand-new:
