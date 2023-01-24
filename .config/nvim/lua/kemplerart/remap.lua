@@ -18,7 +18,7 @@ map('n', "N", "Nzz")
 map('n', "<C-l>", "<cmd>noh<CR>")
 
 -- return cursor to the last position
-map('n', "rr", "'.")
+map('n', "rr", "'.zz")
 
 -- yp to instantly paste the current line below
 map('n', "yp", "yyp")
