@@ -3,9 +3,9 @@
 local lsp = require('lsp-zero')
 lsp.preset('recommended')
 
-lsp.ensure_installed({
-    'sumneko_lua',
-})
+-- lsp.ensure_installed({
+--     'sumneko_lua',
+-- })
 
 -- (Optional) Configure lua language server for neovim
 lsp.nvim_workspace()
@@ -18,6 +18,7 @@ require'py_lsp'.setup {
   default_venv_name = ".venv" -- For local venv
 }
 
+-- Diagnostics
 vim.diagnostic.config({
   virtual_text = false
 })
@@ -25,4 +26,3 @@ vim.diagnostic.config({
 -- Show line diagnostics automatically in hover window
 vim.o.updatetime = 250
 vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
-
