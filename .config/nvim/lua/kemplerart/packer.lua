@@ -13,7 +13,7 @@ return require('packer').startup(function(use)
 	  -- or                            , branch = '0.1.x',
 	  requires = { {'nvim-lua/plenary.nvim'} }
   }
-  
+
   -- use {
   --     'projekt0n/github-nvim-theme',
   --     config = function()
@@ -45,6 +45,12 @@ return require('packer').startup(function(use)
           {'L3MON4D3/LuaSnip'},             -- Required
           {'rafamadriz/friendly-snippets'}, -- Optional
       }
+  }
+
+  use {
+      'HallerPatrick/py_lsp.nvim',
+      -- Support for versioning
+      -- tag = "v0.0.1" 
   }
 
   use({
