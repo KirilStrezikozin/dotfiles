@@ -120,6 +120,7 @@ fi
 
 # alias for dotfiles git bare repo call
 alias dotfiles='/usr/bin/git --git-dir=/home/kemplerart/dotfiles/ --work-tree=/home/kemplerart'
+alias dotfiles1='/usr/bin/git --git-dir=/home/strezinthy/dotfiles/ --work-tree=/home/strezinthy'
 
 # alias for quick screenshot
 alias screenshot='gnome-screenshot -d 3'
