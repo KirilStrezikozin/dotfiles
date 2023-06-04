@@ -1,6 +1,6 @@
 # heiskempler's dotfiles
 
-Send myself to hell if I loose em (dotfiles).
+Send myself to hell if I lose em (dotfiles).
 
 Original idea of configuring config files in the way I did belongs to [Atlassian: How to Store Dotfiles - A Bare Git Repository](https://www.atlassian.com/git/tutorials/dotfiles).
 
