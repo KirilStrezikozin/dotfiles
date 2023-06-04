@@ -35,10 +35,10 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
 
 # transparent terminal bg
-exec --no-startup-id picom -CGb
+exec --no-startup-id picom --config /home/heiskempler/.config/picom/picom.conf
 
 # apps on startup
-exec --no-startup-id i3-msg 'workspace 1; exec brave; workspace 2; exec gnome-terminal; workspace 1'
+exec --no-startup-id i3-msg 'workspace 1; exec brave-browser; workspace 2; exec gnome-terminal; workspace 1'
 
 # GET DEM BORDERS OUT OF HEREc:w
 #
