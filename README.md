@@ -1,4 +1,4 @@
-# kemplerart's dotfiles
+# heiskempler's dotfiles
 
 Send myself to hell if I loose em (dotfiles).
 
