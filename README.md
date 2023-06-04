@@ -4,14 +4,14 @@ Send myself to hell if I lose em (dotfiles).
 
 Original idea of configuring config files in the way I did belongs to [Atlassian: How to Store Dotfiles - A Bare Git Repository](https://www.atlassian.com/git/tutorials/dotfiles).
 
-## Note for myself about how to pull
+## How to pull
 
 Sync:
 ```
 dotfiles pull
 ```
 
-Brand-new:
+From scratch:
 
 ```
 git clone --bare https://github.com/KirilStrezikozin/dotfiles $HOME/dotfiles
