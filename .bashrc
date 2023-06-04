@@ -119,7 +119,7 @@ fi
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # alias for dotfiles git bare repo call
-alias dotfiles='/usr/bin/git --git-dir=/home/kemplerart/dotfiles/ --work-tree=/home/kemplerart'
+alias dotfiles='/usr/bin/git --git-dir=/home/heiskempler/dotfiles/ --work-tree=/home/heiskempler'
 
 # alias for quick screenshot
 alias screenshot='gnome-screenshot -d 3'
