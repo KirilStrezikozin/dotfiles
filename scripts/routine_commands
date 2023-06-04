@@ -1,0 +1,6 @@
+sudo apt install feh
+sudo apt install gcc python3-dev python3-pip libxml2-dev libxslt1-dev zlib1g-dev g++
+
+sudo dnf install gcc-c++
+sudo dnf install feh
+sudo dnf install picom
