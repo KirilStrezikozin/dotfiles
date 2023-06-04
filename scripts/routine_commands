@@ -8,3 +8,14 @@ sudo dnf install xrandr
 
 # run xrandr for screen names. Command below places Screen1 to the left of the Screen2
 xrandr --output Screen2 --auto --pos 0x0 --output Screen1 --auto --left-of Screen2
+
+# install snap
+sudo dnf install snapd
+sudo ln -s /var/lib/snapd/snap /snap
+
+# get all available blender versions
+snap blender info
+# pick up channel name e.g. 2.80/stable
+
+# install blender with snap. Replace 2.80/stable with the desired channel name
+sudo snap install blender --classic --channel=2.80/stable
