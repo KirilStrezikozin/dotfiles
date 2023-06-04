@@ -34,6 +34,9 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
+# Monitor to the left of primary leptop screen (setup depandant)
+exec --no-startup-id xrandr --output LVDS-1 --auto --pos 0x0 --output VGA-1 --auto --left-of LVDS-1
+
 # transparent terminal bg
 exec --no-startup-id picom --config /home/heiskempler/.config/picom/picom.conf
 
