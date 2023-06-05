@@ -125,3 +125,19 @@ alias dotfiles='/usr/bin/git --git-dir=/home/heiskempler/dotfiles/ --work-tree=/
 
 # alias for quick screenshot
 alias screenshot='gnome-screenshot -d 3'
+
+# aliases for blender
+alias blender_2.80='/usr/local/bin/blender/2.80/blender'
+alias blender_2.81='/usr/local/bin/blender/2.81/blender'
+alias blender_2.82='/usr/local/bin/blender/2.82/blender'
+alias blender_2.83='/usr/local/bin/blender/2.83.9/blender'
+alias blender_2.90='/usr/local/bin/blender/2.90.1/blender'
+alias blender_2.91='/usr/local/bin/blender/2.91.2/blender'
+alias blender_2.92='/usr/local/bin/blender/2.92.0/blender'
+alias blender_2.93='/usr/local/bin/blender/2.93.9/blender'
+alias blender_3.0='/usr/local/bin/blender/3.0.1/blender'
+alias blender_3.1='/usr/local/bin/blender/3.1.2/blender'
+alias blender_3.2='/usr/local/bin/blender/3.2.2/blender'
+alias blender_3.3='/usr/local/bin/blender/3.3.7/blender'
+alias blender_3.4='/usr/local/bin/blender/3.4.1/blender'
+alias blender_3.5='/usr/local/bin/blender/3.5.0/blender'
