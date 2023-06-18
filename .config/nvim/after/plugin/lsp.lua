@@ -12,10 +12,47 @@ lsp.nvim_workspace()
 
 lsp.setup()
 
-require'py_lsp'.setup {
+-- Setup language servers
+local lspconfig = require('lspconfig')
+
+lspconfig.pylsp.setup {
   -- This is optional, but allows to create virtual envs from nvim
   host_python = "/usr/bin/python3",
-  default_venv_name = "venv" -- For local venv
+  default_venv_name = "venv", -- For local venv
+
+  settings = {
+    pylsp = {
+      plugins = {
+        autopep8 = {
+          enabled = true,
+        },
+        pycodestyle = {
+          enabled = true,
+        },
+        pyflakes = {
+          enabled = false,
+          ignore = {'F722'}, -- Doesn't work :(
+        },
+        flake8 = {
+          enabled = true,
+          ignore = {'F722'},
+        }
+      }
+    }
+  }
+}
+
+lspconfig.pyright.setup {
+    settings = {
+      -- disableLanguageServices = true,
+
+      python = {
+        analysis = {
+          typeCheckingMode = 'off',
+        },
+        disable = {'F722'},
+      }
+    }
 }
 
 -- Diagnostics
