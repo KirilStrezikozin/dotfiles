@@ -20,4 +20,6 @@ vim.opt.syntax = "on"
 
 vim.g.mapleader = " "
 
+vim.opt.colorcolumn = '80'
+
 -- vim.opt.spell = true
