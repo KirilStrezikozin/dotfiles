@@ -20,4 +20,4 @@ vim.opt.syntax = "on"
 
 vim.g.mapleader = " "
 
--- vim.opt.spell = true
+vim.opt.spell = true

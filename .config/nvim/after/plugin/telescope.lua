@@ -10,4 +10,5 @@ map("n", "<leader>pzf", "<cmd>Telescope current_buffer_fuzzy_find<CR>")
 map("n", "<leader>pgc", "<cmd>Telescope git_commits<CR>")
 map("n", "<leader>pgb", "<cmd>Telescope git_branches<CR>")
 map("n", "<leader>pgs", "<cmd>Telescope git_status<CR>")
+map("n", "<leader>pgf", "<cmd>Telescope git_files<CR>")
 
