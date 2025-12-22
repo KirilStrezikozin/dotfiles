@@ -1,0 +1,7 @@
+[picow]
+device = /dev/ttyACM0
+baudrate = 115200
+databits = 8
+parity = none
+stopbits = 1
+flow = none
