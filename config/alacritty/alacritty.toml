@@ -1,0 +1,43 @@
+[window]
+opacity=1.0 # 0.0 for full black.
+[window.padding]
+y = 6 
+x = 6  
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font Propo", style = "Regular" }
+# size = 20
+size = 9
+
+[colors.primary]
+background = '#121212'
+foreground = '#ffffff'
+
+[colors.cursor]
+text   = '#2E2837'
+cursor = '#1db954'
+
+[colors.normal]
+black   = '#1a1b26'
+red     = '#e22134'
+green   = '#1db954'
+yellow  = '#e0af68'
+blue    = '#7aa2f7'
+magenta = '#bb9af7'
+cyan    = '#7dcfff'
+white   = '#ffffff'
+
+[colors.bright]
+black   = '#444b6a'
+red     = '#ff5370'
+green   = '#3dffb0'
+yellow  = '#f0c674'
+blue    = '#8fa1d0'
+magenta = '#c3a6f5'
+cyan    = '#7be0c9'
+white   = '#ffffff'
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"

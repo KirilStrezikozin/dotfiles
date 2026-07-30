@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#
+# Credits: https://pickard.cc/posts/git-identity-home-manager/
+# With addition of signing and ssh keys because he didn't have that and
+# that's the part for me that's actually important and takes extra time than
+# just name/email.
+#
+# Usage:
+# git init . (or existing repo)
+# git id
+# fzf select your name/email/ssh/signingkey for that local repo.
+# Otherwise you won't be able to commit unless you set global defaults (I didn't).
+
+# get each set of usernames from the git config (which will be generated from our `default.nix` above)
+IDENTITIES=$(git config --global --name-only --get-regexp "user.*..name" | sed -e 's/^user.//' -e 's/.name$//')
+# filter them with fzf
+ID=$(echo "${IDENTITIES}" | fzf -e -1 +m -q "$1")
+if ! git config --global --get-regexp "user.${ID}.name" > /dev/null; then
+    echo "Please use a valid git identity
+Options:"
+    git config --global --name-only --get-regexp "user.*..name" | sed -e 's/^user.//' -e 's/.name$//' -e 's/^/\t/'
+    exit 1
+fi
+# set the ID locally in each repo (eg in the repo's .git/config)
+git config user.name "$(git config user.${ID}.name)"
+git config user.email "$(git config user.${ID}.email)"
+git config user.signingkey "$(git config user.${ID}.signingkey)"
+git config user.sshkey "$(git config user.${ID}.sshkey)"
+git config core.sshCommand "ssh -i $(git config user.${ID}.sshkey) -o IdentitiesOnly=yes"
+
+echo "Name: $(git config user.name)"
+echo "Email: $(git config user.email)"
+echo "Signing key: $(git config user.signingkey)"
+echo "SSH key: $(git config user.sshkey)"
