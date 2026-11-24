@@ -25,6 +25,20 @@
 
   networking.networkmanager.enable = true;
 
+  services.sunshine = {
+    enable = true;
+    openFirewall = true;
+    capSysAdmin = true;
+  };
+
+  networking.firewall = {
+    allowedTCPPorts = [ 47984 47989 47990 48010 ];
+    allowedUDPPortRanges = [
+      { from = 47998; to = 48000; }
+      { from = 8000; to = 8010; }
+    ];
+  };
+
   time.timeZone = "Europe/Amsterdam";
 
   services.xserver = {
@@ -37,10 +51,11 @@
         ];
     };
     xkb = {
-      layout = "us,ua";
+      layout = "us,ua,ru";
       variant = "";
       options = "grp:alt_space_toggle";
     };
+	videoDrivers = [ "displaylink" "modesetting" ];
   };
 
   services.displayManager.ly.enable = true;
@@ -50,11 +65,20 @@
     powerOnBoot = false;
   };
 
+  hardware.uinput.enable = true;
+
   services.blueman.enable = true;
 
   services.pipewire = {
     enable = true;
     pulse.enable = true;
+  };
+
+  services.flatpak.enable = true;
+  xdg.portal = {
+    enable = true;
+	extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+	config.commong.default = "*";
   };
 
   services.avahi = {
@@ -81,6 +105,10 @@
 
   services.tailscale.enable = true;
 
+  services.udev.packages = with pkgs; [
+    platformio-core.udev
+  ];
+
   programs.nix-ld.enable = true;
 
   programs.zsh.enable = true;
@@ -88,7 +116,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.heiskempler = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ];
+    extraGroups = [ "wheel" "docker" "input" "uinput" "dialout" ];
     packages = with pkgs; [
       tree
     ];
@@ -101,6 +129,8 @@
     vim
     wget
     git
+
+	displaylink
   ];
 
   environment.variables.EDITOR = "vim";
@@ -115,14 +145,24 @@
     enableSSHSupport = true;
   };
 
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+  };
+
+  programs.gamemode.enable = true;
+
   services.openssh.enable = true;
 
   virtualisation.docker = {
     enable = true;
   };
 
-  boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
-  boot.kernelModules = [ "v4l2loopback" ];
+  hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ];
+
+  boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback evdi ];
+  boot.kernelModules = [ "v4l2loopback" "uinput" "evdi" ];
 
   system.stateVersion = "26.05";
 }

@@ -1,8 +1,9 @@
-{ lib
-, config
-, pkgs
-, inputs
-, ...
+{
+  lib,
+  config,
+  pkgs,
+  inputs,
+  ...
 }:
 let
   username = "heiskempler";
@@ -82,6 +83,13 @@ in
           signingkey = "B98D52900CA954AB";
           sshkey = "${config.home.homeDirectory}/.ssh/meduzzen0_ed25519";
         };
+
+        infuse = {
+          name = "Kiril Strezikozin";
+          email = "k.strezikozin@infusevendors.com";
+          signingkey = "2EAA1E19A057B049";
+          sshkey = "${config.home.homeDirectory}/.ssh/infuse0_ed25519";
+        };
       };
       alias = {
         identity = "! git-identity";
@@ -98,14 +106,24 @@ in
     enableDefaultConfig = false;
     settings = {
       "github-personal" = {
-        hostname = "github.com";
+        hostname = "ssh.github.com";
+        port = 443;
         user = "git";
         identityFile = "${config.home.homeDirectory}/.ssh/0_ed25519";
       };
       "github-meduzzen" = {
-        hostname = "github.com";
+        hostname = "ssh.github.com";
+        port = 443;
+        # Or just hostname = "github.com"; without port if outbound ssh works.
         user = "git";
         identityFile = "${config.home.homeDirectory}/.ssh/meduzzen0_ed25519";
+      };
+      "github-infuse" = {
+        hostname = "ssh.github.com";
+        port = 443;
+        # Or just hostname = "github.com"; without port if outbound ssh works.
+        user = "git";
+        identityFile = "${config.home.homeDirectory}/.ssh/infuse0_ed25519";
       };
     };
   };
@@ -119,6 +137,11 @@ in
     shellAliases = {
       laz = "lazygit";
       lad = "lazydocker";
+    };
+
+    sessionVariables = {
+      EDITOR = "nvim";
+      _Z_CMD = "in";
     };
 
     oh-my-zsh = {
@@ -229,13 +252,30 @@ in
     ];
   };
 
+  programs.awscli = {
+    enable = true;
+    settings = {
+      "sso-session infuse" = {
+        sso_start_url = "https://infusemedia.awsapps.com/start/";
+        sso_region = "us-east-1";
+        sso_registration_scopes = "sso:account:access";
+      };
+
+      "profile VoiceAgentEKSDashboardAccess-058264301975" = {
+        sso_session = "infuse";
+        sso_account_id = "058264301975";
+        sso_role_name = "VoiceAgentEKSDashboardAccess";
+        region = "us-east-1";
+        output = "yaml";
+      };
+    };
+  };
+
   xdg.configFile = lib.mkMerge [
-    (builtins.mapAttrs
-      (name: config: {
-        source = create_symlink "${dotfiles}/${config.subpath}";
-        recursive = config.recursive;
-      })
-      configs)
+    (builtins.mapAttrs (name: config: {
+      source = create_symlink "${dotfiles}/${config.subpath}";
+      recursive = config.recursive;
+    }) configs)
     {
       "BraveSoftware/Brave-Browser/NativeMessagingHosts/org.keepassxc.keepassxc_browser.json".text =
         builtins.toJSON
@@ -249,44 +289,49 @@ in
     }
   ];
 
-  home.sessionVariables = {
-    EDITOR = "nvim";
-  };
+  home.packages =
+    with pkgs;
+    [
+      # Support
+      git-identity
+      ripgrep
+      fzf
+      tldr # Commands cheatsheet better than man pages
+      lazygit
+      lazydocker
+      brightnessctl
+      pavucontrol
+      fastfetch
+      btop
+      maim # Screenshot
+      imv # Viewer
+      feh
+      zip
+      unzip
+      ffmpeg
+      glow
+      gh
 
-  home.packages = with pkgs; [
-    # Support
-    git-identity
-    ripgrep
-    fzf
-    tldr # Commands cheatsheet better than man pages
-    lazygit
-    lazydocker
-    brightnessctl
-    pavucontrol
-    fastfetch
-    btop
-    maim # Screenshot
-    imv # Viewer
-    feh
-    zip
-    unzip
-    ffmpeg
-    glow
-    gh
+      # Essential
+      neovim
+      alacritty
+      tree-sitter
+      nodejs
+      xclip
+      gcc
 
-    # Essential
-    neovim
-    alacritty
-    tree-sitter
-    nodejs
-    xclip
-    gcc
+      brave
+      vesktop # Discord
+      moonlight-qt
+      zathura
+      openvpn
+      telegram-desktop
+      parsec-bin
+      obsidian
+      bun
 
-    brave
-    vesktop # Discord
-    claude-code
-    moonlight-qt
-    zathura
-    openvpn
-  ] ++ languageServersPackages ++ toolingPackages;
+      xhost
+    ]
+    ++ languageServersPackages
+    ++ toolingPackages;
 }
