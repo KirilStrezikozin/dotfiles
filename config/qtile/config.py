@@ -1,16 +1,37 @@
 from libqtile import bar, extension, hook, layout, qtile, widget
-from libqtile.config import Click, Drag, Group, Key, KeyChord, Match, Screen
+from libqtile.config import Click, Drag, Group, Key, KeyChord, Match, Screen, Output
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
+from libqtile.log_utils import logger
 import os
 import subprocess
 
 
 mod = "mod4"
 alt = "mod1"
+myTerm = "alacritty"
 terminal = guess_terminal()
 
-myTerm = "alacritty"
+
+@lazy.function
+def spawncmd_here(qtile):
+    scr = qtile.current_screen
+    bar_ = scr.top
+    logger.warning("spawncmd_here: screen=%s info=%s bar=%r", scr.index, scr.info(), bar_)
+    if bar_ is None:
+        return
+    for w in bar_.widgets:
+        logger.warning("spawncmd_here: screen=%s info=%s bar=%r", scr.index, scr.info(), bar_)
+    prompt = next((w for w in bar_.widgets if type(w).__name__ == "Prompt"), None)
+    logger.warning("  picked prompt: %r", prompt)
+    if prompt is None:
+        return
+
+    def run(cmd):
+        if cmd:
+            qtile.spawn(cmd, shell=True)
+
+    prompt.start_input("spawn", run, "cmd")
 
 keys = [
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
@@ -40,6 +61,12 @@ keys = [
     Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
+    # Screens:
+    # Key([mod], "w", lazy.to_screen(0), desc="Focus main screen"),
+    # Key([mod], "e", lazy.to_screen(1), desc="Focus second screen"),
+    Key([mod], "period", lazy.next_screen(), desc="Move focus to next screen"),
+    Key([mod], "comma", lazy.prev_screen(), desc="Move focus to prev screen"),
+
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
@@ -75,7 +102,7 @@ keys = [
         lazy.spawn('sh -c "maim -s | xclip -selection clipboard -t image/png -i"'),
         desc="Screenshot",
     ),
-    Key([mod], "d", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
+    Key([mod], "d", spawncmd_here, desc="Spawn a command using a prompt widget"),
     Key(
         [],
         "XF86AudioRaiseVolume",
@@ -210,109 +237,116 @@ widget_defaults = dict(
 
 extension_defaults = widget_defaults.copy()
 
-sep = widget.Sep(linewidth=1, padding=8, foreground=colors[9])
+def sep():
+    return widget.Sep(linewidth=1, padding=8, foreground=colors[9])
 
-screens = [
-    Screen(
+def one_screen(screen_idx: int):
+    bar_widgets=[
+        widget.Spacer(length=8),
+        widget.Wallpaper(
+            directory="~/Pictures/wallpapers/", # adjust
+            random_selection=False,
+            label=os.environ.get("USER"),
+            padding=10,
+            fontsize=12,
+            foreground=colors[1],
+        ),
+        sep(),
+        widget.GroupBox(
+            fontsize=12,
+            margin_y=5,
+            margin_x=5,
+            padding_y=0,
+            padding_x=2,
+            borderwidth=3,
+            active=colors[1],
+            inactive=colors[9],
+            rounded=False,
+            highlight_color=colors[0],
+            highlight_method="line",
+            this_current_screen_border=colors[7],
+            this_screen_border=colors[4],
+            other_current_screen_border=colors[7],
+            other_screen_border=colors[4],
+        ),
+        widget.TextBox(
+            text="|",
+            font="JetBrainsMono Nerd Font Propo Bold",
+            foreground=colors[9],
+            padding=2,
+            fontsize=14,
+        ),
+        widget.CurrentLayout(foreground=colors[1], padding=5),
+        widget.TextBox(
+            text="|",
+            font="JetBrainsMono Nerd Font Propo Bold",
+            foreground=colors[9],
+            padding=2,
+            fontsize=14,
+        ),
+        widget.WindowName(foreground=colors[1], padding=8, max_chars=40),
+        widget.Prompt(
+            name=f"prompt_{screen_idx}",
+            foreground=colors[1],
+        ),
+        sep(),
+        widget.CPU(
+            foreground=colors[1],
+            padding=8,
+            mouse_callbacks={
+                "Button1": lambda: qtile.spawn(myTerm + " -e btop")
+            },
+            format="CPU: {load_percent}%",
+        ),
+        sep(),
+        widget.Memory(
+            foreground=colors[1],
+            padding=8,
+            mouse_callbacks={
+                "Button1": lambda: qtile.spawn(myTerm + " -e btop")
+            },
+            format="Mem: {MemUsed:.0f}{mm}",
+        ),
+        sep(),
+        widget.Battery(
+            foreground=colors[1],
+            low_percentage=0.20,
+            low_foreground=colors[3], 
+            padding=8,
+            update_interval=5,
+            format="{percent:2.0%} {char}",
+            fmt="Bat: {}",
+            charge_char="",
+            discharge_char="",
+            full_char="✔",
+            unknown_char="?",
+            empty_char="!",
+            mouse_callbacks={
+                "Button1": lambda: qtile.spawn(
+                    myTerm + " -e upower -i $(upower -e | grep BAT)"
+                ),
+            },
+        ),
+        sep(),
+        widget.Clock(
+            foreground=colors[1],
+            padding=8,
+            mouse_callbacks={"Button1": lambda: qtile.spawn("notify-date")},
+            format="%a, %b %d - %H:%M",
+        ),
+    ]
+
+    return Screen(
         top=bar.Bar(
-            widgets=[
-                widget.Spacer(length=8),
-                widget.Wallpaper(
-                    directory="~/Pictures/wallpapers/", # adjust
-                    random_selection=False,
-                    label=os.environ.get("USER"),
-                    padding=10,
-                    fontsize=12,
-                    foreground=colors[1],
-                ),
-                sep,
-                widget.GroupBox(
-                    fontsize=12,
-                    margin_y=5,
-                    margin_x=5,
-                    padding_y=0,
-                    padding_x=2,
-                    borderwidth=3,
-                    active=colors[1],
-                    inactive=colors[9],
-                    rounded=False,
-                    highlight_color=colors[0],
-                    highlight_method="line",
-                    this_current_screen_border=colors[7],
-                    this_screen_border=colors[4],
-                    other_current_screen_border=colors[7],
-                    other_screen_border=colors[4],
-                ),
-                widget.TextBox(
-                    text="|",
-                    font="JetBrainsMono Nerd Font Propo Bold",
-                    foreground=colors[9],
-                    padding=2,
-                    fontsize=14,
-                ),
-                widget.CurrentLayout(foreground=colors[1], padding=5),
-                widget.TextBox(
-                    text="|",
-                    font="JetBrainsMono Nerd Font Propo Bold",
-                    foreground=colors[9],
-                    padding=2,
-                    fontsize=14,
-                ),
-                widget.WindowName(foreground=colors[1], padding=8, max_chars=40),
-                widget.Prompt(
-                    foreground=colors[1],
-                ),
-                sep,
-                widget.CPU(
-                    foreground=colors[1],
-                    padding=8,
-                    mouse_callbacks={
-                        "Button1": lambda: qtile.cmd_spawn(myTerm + " -e btop")
-                    },
-                    format="CPU: {load_percent}%",
-                ),
-                sep,
-                widget.Memory(
-                    foreground=colors[1],
-                    padding=8,
-                    mouse_callbacks={
-                        "Button1": lambda: qtile.cmd_spawn(myTerm + " -e btop")
-                    },
-                    format="Mem: {MemUsed:.0f}{mm}",
-                ),
-                sep,
-                widget.Battery(
-                    foreground=colors[1],
-                    low_percentage=0.20,
-                    low_foreground=colors[3], 
-                    padding=8,
-                    update_interval=5,
-                    format="{percent:2.0%} {char}",
-                    fmt="Bat: {}",
-                    charge_char="",
-                    discharge_char="",
-                    full_char="✔",
-                    unknown_char="?",
-                    empty_char="!",
-                    mouse_callbacks={
-                        "Button1": lambda: qtile.cmd_spawn(
-                            myTerm + " -e upower -i $(upower -e | grep BAT)"
-                        ),
-                    },
-                ),
-                sep,
-                widget.Clock(
-                    foreground=colors[1],
-                    padding=8,
-                    mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("notify-date")},
-                    format="%a, %b %d - %H:%M",
-                ),
-            ],
+            widgets=bar_widgets,
             margin=[0, 0, 0, 0],
             size=24,
-        ),
-    ),
-]
+            )
+        )
+
+
+def generate_screens(outputs: list[Output]) -> list[Screen]:
+    return [one_screen(i) for  i in range(len(outputs))]
 
 # Drag floating layouts.
 mouse = [
